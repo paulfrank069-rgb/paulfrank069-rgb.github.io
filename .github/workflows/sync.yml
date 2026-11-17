@@ -1,0 +1,62 @@
+name: Sync site
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+  schedule:
+    - cron: "10 * * * *"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: sync-site
+  cancel-in-progress: true
+
+jobs:
+  sync:
+    if: github.event_name != 'push' || github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Fetch published site
+        uses: actions/checkout@v4
+        with:
+          repository: paulfrank069-rgb/mint11-cardsite-v7k2nq
+          ref: published
+          path: _incoming
+
+      - name: Commit site into project folder
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          rm -rf mint11-cardsite-v7k2nq
+          mkdir -p mint11-cardsite-v7k2nq
+          cp -a _incoming/. mint11-cardsite-v7k2nq/
+          rm -rf mint11-cardsite-v7k2nq/.git
+          rm -rf _incoming
+          cat > index.html << 'HTML'
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="refresh" content="0; url=./mint11-cardsite-v7k2nq/">
+  <title>Redirect</title>
+  <link rel="canonical" href="./mint11-cardsite-v7k2nq/">
+</head>
+<body>
+  <p><a href="./mint11-cardsite-v7k2nq/">Open site</a></p>
+</body>
+</html>
+HTML
+          touch .nojekyll
+          git add -A
+          if git diff --cached --quiet; then
+            echo "No changes"
+          else
+            git commit -m "Sync published site"
+            git push
+          fi
