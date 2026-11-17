@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#F8F1E4">
+  <meta name="color-scheme" content="light">
+  <title>Mint 11 – Verified Cards</title>
+  <style>
+:root {
+  --cream: #F8F1E4;
+  --cream-2: #F3E6D0;
+  --champagne: #EAD7B4;
+  --panel: #FBF3E6;
+  --gold: #D9A12E;
+  --gold-2: #F2C14E;
+  --gold-deep: #A87818;
+  --lavender: #C9B5EC;
+  --lavender-soft: #E9DEFB;
+  --ink: #2E1A47;
+  --ink-soft: #4A3563;
+  --muted: #6B5A78;
+  --line: #E0C98A;
+  --pass-bg: #DCE8D4;
+  --pass-ink: #2F5A3A;
+  --watch-bg: #F6E3A8;
+  --watch-ink: #6B4A10;
+  --alert-bg: #E9DEFB;
+  --alert-ink: #4A2E86;
+  --shadow: 0 10px 30px rgba(46, 26, 71, 0.08);
+  --radius: 18px;
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0;
+  background:
+    radial-gradient(1200px 500px at 10% -10%, #E9DEFB 0%, transparent 55%),
+    radial-gradient(900px 400px at 110% 0%, #F2C14E33 0%, transparent 50%),
+    var(--cream);
+  color: var(--ink);
+  font-family: "Segoe UI", "Helvetica Neue", system-ui, sans-serif;
+  line-height: 1.5;
+  font-size: 16px;
+}
+img { max-width: 100%; height: auto; display: block; }
+a { color: var(--ink); }
+.wrap {
+  width: min(980px, calc(100% - 1.5rem));
+  margin: 0 auto;
+  padding: 1.25rem 0 4rem;
+}
+.site-header {
+  padding: 1.4rem 0 1rem;
+  border-bottom: 2px solid var(--gold);
+}
+.eyebrow {
+  margin: 0 0 0.3rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  font-size: 0.72rem;
+  color: var(--gold-deep);
+  font-weight: 700;
+}
+.site-header h1 {
+  margin: 0;
+  font-family: Palatino, "Palatino Linotype", "Iowan Old Style", "Times New Roman", serif;
+  font-weight: 600;
+  font-size: clamp(1.8rem, 5vw, 2.6rem);
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+}
+.updated, .intro {
+  color: var(--ink-soft);
+  margin: 0.45rem 0 0;
+}
+.counts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin: 0.9rem 0 0;
+}
+.counts span {
+  background: var(--lavender-soft);
+  border: 1px solid var(--lavender);
+  color: var(--ink);
+  border-radius: 999px;
+  padding: 0.2rem 0.7rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+.filters {
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  background: color-mix(in srgb, var(--cream) 88%, white 0%);
+  backdrop-filter: blur(10px);
+  padding: 0.75rem 0 0.55rem;
+  margin: 0 -0.75rem;
+  padding-left: 0.75rem;
+  padding-right: 0.75rem;
+  border-bottom: 1px solid var(--line);
+}
+.filters p {
+  margin: 0 0 0.35rem;
+  font-size: 0.78rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+  font-weight: 700;
+}
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+  margin-bottom: 0.55rem;
+}
+.filters button {
+  appearance: none;
+  border: 1px solid var(--champagne);
+  background: var(--panel);
+  color: var(--ink);
+  min-height: 44px;
+  padding: 0.4rem 0.85rem;
+  border-radius: 999px;
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+.filters button[aria-pressed="true"] {
+  background: var(--ink);
+  color: var(--cream);
+  border-color: var(--ink);
+}
+.filters button:focus-visible,
+.open-btn:focus-visible,
+.shot-btn:focus-visible,
+.lb-nav:focus-visible {
+  outline: 3px solid var(--gold-2);
+  outline-offset: 2px;
+}
+.card {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 1.15rem 1rem 1.3rem;
+  margin: 1.15rem 0 0;
+}
+.card-head h2 {
+  margin: 0.55rem 0 0.25rem;
+  font-size: 1.28rem;
+  line-height: 1.3;
+  font-family: Palatino, "Palatino Linotype", "Iowan Old Style", serif;
+}
+.card-meta {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+.badges { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+.badge {
+  display: inline-flex;
+  align-items: center;
+  min-height: 28px;
+  padding: 0.15rem 0.6rem;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+}
+.badge-PASS { background: var(--pass-bg); color: var(--pass-ink); }
+.badge-WATCH { background: var(--watch-bg); color: var(--watch-ink); }
+.badge-ALERT { background: var(--alert-bg); color: var(--alert-ink); }
+.badge-lane { background: var(--cream-2); color: var(--ink-soft); border: 1px solid var(--line); }
+.open-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.15rem;
+  margin: 0.9rem 0 0.6rem;
+  width: 100%;
+  min-height: 56px;
+  padding: 0.75rem 1rem;
+  border-radius: 14px;
+  background: linear-gradient(180deg, var(--gold-2), var(--gold));
+  color: var(--ink);
+  text-decoration: none;
+  font-weight: 800;
+  font-size: 1.05rem;
+  box-shadow: 0 4px 0 var(--gold-deep);
+}
+.open-sub {
+  font-weight: 500;
+  font-size: 0.75rem;
+  color: var(--ink-soft);
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.live-note, .note, .hint, .empty {
+  color: var(--ink-soft);
+  font-size: 0.92rem;
+}
+.hint { margin: 0.5rem 0 0; }
+.block { margin-top: 1rem; }
+.block h3 {
+  margin: 0 0 0.4rem;
+  font-size: 0.78rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--gold-deep);
+}
+.solds { margin: 0; }
+.kv {
+  display: grid;
+  grid-template-columns: 8.2rem 1fr;
+  gap: 0.35rem 0.8rem;
+  padding: 0.45rem 0;
+  border-bottom: 1px solid color-mix(in srgb, var(--line) 70%, var(--panel));
+}
+.kv dt {
+  margin: 0;
+  font-weight: 700;
+  color: var(--ink-soft);
+  font-size: 0.92rem;
+}
+.kv dd { margin: 0; }
+.kv.highlight dd { font-weight: 700; color: var(--pass-ink); }
+.kv.miss dd { font-weight: 700; color: #7A2E2E; }
+.risks ul { margin: 0; padding-left: 1.15rem; }
+.risks li { margin: 0.2rem 0; }
+.shots {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.65rem;
+}
+.shot[data-kind="centering"],
+.shot[data-kind="corners"],
+.shot[data-kind="closeup"] {
+  grid-column: 1 / -1;
+}
+.shot {
+  margin: 0;
+  background: var(--cream-2);
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid var(--line);
+}
+.shot-btn {
+  appearance: none;
+  border: 0;
+  background: #EFE3CF;
+  width: 100%;
+  padding: 0;
+  cursor: zoom-in;
+  display: block;
+}
+.shot img {
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+  background: #EFE3CF;
+}
+.shot figcaption {
+  padding: 0.4rem 0.6rem 0.55rem;
+  font-size: 0.82rem;
+  color: var(--ink-soft);
+}
+.empty {
+  background: var(--lavender-soft);
+  border-radius: var(--radius);
+  padding: 1rem;
+  margin-top: 1rem;
+}
+.site-footer {
+  margin-top: 2rem;
+  color: var(--muted);
+  font-size: 0.85rem;
+  border-top: 1px solid var(--line);
+  padding-top: 1rem;
+}
+dialog.lightbox {
+  border: 0;
+  padding: 0;
+  background: transparent;
+  width: min(1100px, 100vw);
+  max-height: 100vh;
+}
+dialog.lightbox::backdrop {
+  background: rgb(46 26 71 / 0.84);
+}
+.lb-frame {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.6rem;
+}
+.lb-frame img {
+  max-height: calc(100vh - 7rem);
+  width: auto;
+  max-width: 100%;
+  border-radius: 8px;
+  background: #EFE3CF;
+}
+.lb-cap {
+  color: var(--cream);
+  text-align: center;
+  margin: 0;
+  font-size: 0.92rem;
+}
+.lb-bar {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+.lb-nav {
+  appearance: none;
+  border: 1px solid var(--lavender);
+  background: var(--ink);
+  color: var(--cream);
+  min-height: 44px;
+  min-width: 44px;
+  padding: 0.4rem 0.9rem;
+  border-radius: 999px;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+@media (max-width: 520px) {
+  .kv { grid-template-columns: 1fr; gap: 0.1rem; }
+  .wrap { width: min(100% - 1.1rem, 980px); }
+}
+@media (min-width: 800px) {
+  .card { padding: 1.4rem 1.4rem 1.6rem; }
+}
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <header class="site-header">
+      <p class="eyebrow">Mint 11 Hobby Hub</p>
+      <h1>Mint 11 – Verified Cards</h1>
+      <p class="updated">Last updated 17 Nov 2026, 18:38 Asia/Bangkok (ICT)</p>
+      <div class="counts" aria-label="Counts by status">
+        <span>9 cards</span>
+        <span>5 PASS</span>
+        <span>3 WATCH</span>
+        <span>1 ALERT</span>
+      </div>
+      <p class="intro">CT-verified cards only. Prices are last solds — no max bid. ALERT is a centering flag, not a buy pass. All listings re-checked live 17 Nov 2026, 10:10 ICT.</p>
+    </header>
+
+    <nav class="filters" aria-label="Filter cards">
+      <p>Status</p>
+      <div class="row"><button type='button' data-filter-status='ALL' aria-pressed='true'>All (9)</button><button type='button' data-filter-status='PASS' aria-pressed='false'>PASS (5)</button><button type='button' data-filter-status='WATCH' aria-pressed='false'>WATCH (3)</button><button type='button' data-filter-status='ALERT' aria-pressed='false'>ALERT (1)</button></div>
+      <p>Lane</p>
+      <div class="row"><button type='button' data-filter-lane='ALL' aria-pressed='true'>All lanes (9)</button><button type='button' data-filter-lane='1' aria-pressed='false'>Lane 1 (6)</button><button type='button' data-filter-lane='2' aria-pressed='false'>Lane 2 (2)</button><button type='button' data-filter-lane='5' aria-pressed='false'>Lane 5 (1)</button></div>
+    </nav>
+
+    <main id="list">
+      
+<article class="card" data-status="PASS" data-lane="1" id="umbreon-skyridge-h30">
+  <header class="card-head">
+    <div class="badges">
+      <span class="badge badge-PASS">PASS</span>
+      <span class="badge badge-lane">Lane 1</span>
+    </div>
+    <h2>2003 Skyridge Holo Umbreon #H30, PSA 9</h2>
+    <p class="card-meta"><span>Lane 1 · TAG Flip</span> · <span>Verified 17 Nov 2026, 12:25 Asia/Bangkok (ICT)</span></p>
+  </header>
+  <a class='open-btn' href='https://alt.xyz/itm/b5319ae2-6be4-4207-a38b-b99a7eeb368b' target='_blank' rel='noopener noreferrer'>Open listing<span class='open-sub'>Alt · https://alt.xyz/itm/b5319ae2-6be4-4207-a38b-b99a7eeb368b</span></a>
+  <p class='live-note'>Live as of 12:17 ICT, 17 Nov 2026; closes Fri 27 Nov 09:02 ICT</p>
+  <dl class='solds facts'><div class='kv'><dt>Live / ask</dt><dd>Current bid $1,724 (0 bids) as of 12:17 ICT, 17 Nov 2026. Alt value ~$10,100, so expect it to rise</dd></div><div class='kv'><dt>Closes</dt><dd>Fri 27 Nov 2026 09:02 ICT</dd></div><div class='kv highlight'><dt>If it hits</dt><dd>TAG 10 (estimate): about +$58,330 if bought at $9,200 (PSA 9 last sold); +$67,301 at the current $1,724</dd></div><div class='kv miss'><dt>If it misses</dt><dd>No TAG 9 sale; using the PSA 9 $9,200 sale as stand-in: about −$2,993 at $9,200; +$5,978 at $1,724</dd></div></dl>
+  <section class='block money'><h3>Last solds (30 days)</h3><dl class='solds'><div class='kv'><dt>PSA 10</dt><dd>$96,670.80 (Alt, 12 Nov); $100,100 (eBay, 2 Nov); $90,000 (Fanatics, 1 Nov)</dd></div><div class='kv'><dt>PSA 9</dt><dd>$9,200 (eBay, 16 Nov); $10,000 (eBay, 15 Nov)</dd></div><div class='kv'><dt>CGC 10</dt><dd>$8,855 (eBay, 15 Nov)</dd></div><div class='kv'><dt>TAG 10</dt><dd>No sale in 30 days — estimate 0.8 × $96,670.80 = $77,337</dd></div></dl></section>
+  <section class='block risks'><h3>Risks</h3><ul><li>Score margin is very thin: worst case 964.3 vs the 964 bar</li><li>Tiny white flecks on the back right edge: dust or very light whitening, can&#x27;t tell from photos</li><li>TAG 10 value is an estimate (no TAG 10 sale in 30 days)</li><li>Prices are falling: PSA 10 $132k (25 Oct) → $96.7k (12 Nov), PSA 9 ~$18k (4 Oct) → $9.2k (16 Nov)</li></ul></section>
+  <section class='block gradeblock'><h3>Score &amp; centering</h3><dl class='solds'><div class='kv'><dt>Score</dt><dd>964–988 (worst case 964.3, just above the 964 bar)</dd></div><div class='kv'><dt>Front centering</dt><dd>e-card front, thin pair only: T 72 / R 71 px (50.3/49.7)</dd></div><div class='kv'><dt>Back centering</dt><dd>L/R 47.8/52.2, T/B 49.1/50.9</dd></div></dl><p class='note'>Measured by CT 17 Nov from the full-size originals (front 2029×3392, card 1,541 px wide). All 8 corners clean in CT crops.</p></section>
+  <section class='block gallery'><h3>Photos</h3><div class='shots'><figure class='shot' data-kind='overview'><button type='button' class='shot-btn' data-idx='0' aria-label='Enlarge: Card front (label cropped)'><img src='images/umbreon-skyridge-h30_00_overview.jpg' alt='2003 Skyridge Umbreon H30 – Card front (label cropped)' width='1400' height='1934' loading='lazy'></button><figcaption>Card front (label cropped)</figcaption></figure><figure class='shot' data-kind='overview'><button type='button' class='shot-btn' data-idx='1' aria-label='Enlarge: Card back (label cropped)'><img src='images/umbreon-skyridge-h30_01_overview.jpg' alt='2003 Skyridge Umbreon H30 – Card back (label cropped)' width='1400' height='1931' loading='lazy'></button><figcaption>Card back (label cropped)</figcaption></figure><figure class='shot' data-kind='centering'><button type='button' class='shot-btn' data-idx='2' aria-label='Enlarge: Front centering · thin pair T/R (e-card) · 3 stations per side'><img src='images/umbreon-skyridge-h30_02_centering.jpg' alt='2003 Skyridge Umbreon H30 – Front centering · thin pair T/R (e-card) · 3 stations per side' width='1086' height='760' loading='lazy'></button><figcaption>Front centering · thin pair T/R (e-card) · 3 stations per side</figcaption></figure><figure class='shot' data-kind='centering'><button type='button' class='shot-btn' data-idx='3' aria-label='Enlarge: Back centering · 47.8/52.2 L/R, 49.1/50.9 T/B'><img src='images/umbreon-skyridge-h30_03_centering.jpg' alt='2003 Skyridge Umbreon H30 – Back centering · 47.8/52.2 L/R, 49.1/50.9 T/B' width='1086' height='1484' loading='lazy'></button><figcaption>Back centering · 47.8/52.2 L/R, 49.1/50.9 T/B</figcaption></figure><figure class='shot' data-kind='corners'><button type='button' class='shot-btn' data-idx='4' aria-label='Enlarge: Front corners · CT x4'><img src='images/umbreon-skyridge-h30_04_corners.jpg' alt='2003 Skyridge Umbreon H30 – Front corners · CT x4' width='964' height='1000' loading='lazy'></button><figcaption>Front corners · CT x4</figcaption></figure><figure class='shot' data-kind='corners'><button type='button' class='shot-btn' data-idx='5' aria-label='Enlarge: Back corners · CT x4'><img src='images/umbreon-skyridge-h30_05_corners.jpg' alt='2003 Skyridge Umbreon H30 – Back corners · CT x4' width='964' height='1000' loading='lazy'></button><figcaption>Back corners · CT x4</figcaption></figure><figure class='shot' data-kind='corners'><button type='button' class='shot-btn' data-idx='6' aria-label='Enlarge: Back right edge flecks · x6'><img src='images/umbreon-skyridge-h30_06_corners.jpg' alt='2003 Skyridge Umbreon H30 – Back right edge flecks · x6' width='1400' height='305' loading='lazy'></button><figcaption>Back right edge flecks · x6</figcaption></figure></div><p class='hint'>Tap a photo to enlarge.</p></section>
+</article>
+
+<article class="card" data-status="WATCH" data-lane="1" id="mew-southern-islands">
+  <header class="card-head">
+    <div class="badges">
+      <span class="badge badge-WATCH">WATCH</span>
+      <span class="badge badge-lane">Lane 1</span>
+    </div>
+    <h2>2001 Southern Islands Promo Holo Mew #1, CGC 10</h2>
+    <p class="card-meta"><span>Lane 1 · TAG Flip</span> · <span>Verified 17 Nov 2026, 06:14–06:40 Asia/Bangkok (ICT) | Re-checked live and comps refreshed 17 Nov 2026, 10:10 Asia/Bangkok (ICT)</span></p>
+  </header>
+  <a class='open-btn' href='https://alt.xyz/itm/c4cc0889-7d30-4abd-af13-6f3272b92f41' target='_blank' rel='noopener noreferrer'>Open listing<span class='open-sub'>Alt · https://alt.xyz/itm/c4cc0889-7d30-4abd-af13-6f3272b92f41</span></a>
+  <p class='live-note'>Auction live as of 10:10 ICT, 17 Nov 2026; closes Fri 20 Nov 2026 09:02 ICT</p>
+  <dl class='solds facts'><div class='kv'><dt>Live / ask</dt><dd>Current bid $3,111 (4 bids) as of 10:10 ICT, 17 Nov 2026</dd></div><div class='kv'><dt>Closes</dt><dd>Fri 20 Nov 2026 09:02 ICT</dd></div><div class='kv highlight'><dt>If it hits</dt><dd>Estimate only: about +$383,459 at the current bid if it gets a TAG 10 (0.9 × $430,472.64 estimate). Not a real comp; no TAG 10 has ever sold</dd></div><div class='kv miss'><dt>If it misses</dt><dd>TAG 9 (0.9 × $7,858.80 = $7,072.92): about +$3,107 at the current bid. The bid is far below market and will rise; at a higher price a TAG 9 becomes a loss</dd></div></dl>
+  <section class='block money'><h3>Last solds (30 days)</h3><dl class='solds'><div class='kv'><dt>CGC 10</dt><dd>$12,600 (Alt, 29 Oct); $19,200 (Fanatics, 25 Oct). Alt $10,088.40 (12 Nov) still pending</dd></div><div class='kv'><dt>PSA 9</dt><dd>$6,100 (eBay, 16 Nov); $5,600–$8,100 (15 Nov)</dd></div><div class='kv'><dt>TAG 9</dt><dd>$7,858.80 (Alt, 22 Oct)</dd></div><div class='kv'><dt>TAG 10</dt><dd>No sale on record. Estimate $430,472.64 = 0.8 × PSA 10 (estimate only)</dd></div><div class='kv'><dt>PSA 10</dt><dd>$538,090.80 (Alt, 5 Nov); $660,000 (11 Oct)</dd></div></dl></section>
+  <section class='block risks'><h3>Risks</h3><ul><li>TAG 10 value is a mechanical estimate from 6-figure PSA 10 sales; no TAG 10 has ever sold</li><li>CT score range crosses the 964 PASS line; kept as WATCH, not promoted</li><li>Front L/R about 48/52 (lane measured 47.4)</li><li>One uncertain mark on the front TL rim</li></ul></section>
+  <section class='block gradeblock'><h3>Score &amp; centering</h3><dl class='solds'><div class='kv'><dt>Score</dt><dd>WATCH – score 962–967 (CT method value 965–967 reaches the 964 line; kept as WATCH until Frank decides). Lane: 962.5–964.5</dd></div><div class='kv'><dt>Front centering</dt><dd>L/R 48.2/51.8 (stations 48.2, 48.3, 47.3), T/B 50.1/49.9</dd></div><div class='kv'><dt>Back centering</dt><dd>L/R 51.9/48.1 (stations 50.8, 51.9, 52.8), T/B 50.3/49.7</dd></div></dl><p class='note'>Front TL: small dark mark on the left-edge rim, no step in the edge (uncertain). Other 7 corners and all 8 edges clean in CT crops</p></section>
+  <section class='block gallery'><h3>Photos</h3><div class='shots'><figure class='shot' data-kind='overview'><button type='button' class='shot-btn' data-idx='7' aria-label='Enlarge: Card front (label cropped)'><img src='images/mew-southern-islands_00_overview.jpg' alt='Southern Islands Mew card front, slab label cropped off' width='1400' height='1922' loading='lazy'></button><figcaption>Card front (label cropped)</figcaption></figure><figure class='shot' data-kind='overview'><button type='button' class='shot-btn' data-idx='8' aria-label='Enlarge: Card back (label cropped)'><img src='images/mew-southern-islands_01_overview.jpg' alt='Southern Islands Mew card back, slab label cropped off' width='1400' height='1919' loading='lazy'></button><figcaption>Card back (label cropped)</figcaption></figure><figure class='shot' data-kind='centering'><button type='button' class='shot-btn' data-idx='9' aria-label='Enlarge: Front centering · 48.2/51.8 L/R, 50.1/49.9 T/B'><img src='images/mew-southern-islands_02_centering.jpg' alt='Mew front centering, three stations per side' width='1400' height='1913' loading='lazy'></button><figcaption>Front centering · 48.2/51.8 L/R, 50.1/49.9 T/B</figcaption></figure><figure class='shot' data-kind='centering'><button type='button' class='shot-btn' data-idx='10' aria-label='Enlarge: Back centering · 51.9/48.1 L/R, 50.3/49.7 T/B'><img src='images/mew-southern-islands_03_centering.jpg' alt='Mew back centering, three stations per side' width='1400' height='1913' loading='lazy'></button><figcaption>Back centering · 51.9/48.1 L/R, 50.3/49.7 T/B</figcaption></figure><figure class='shot' data-kind='corners'><button type='button' class='shot-btn' data-idx='11' aria-label='Enlarge: All 8 corners (front left, back right)'><img src='images/mew-southern-islands_04_corners.jpg' alt='Mew all eight corners zoomed, no slab label' width='1400' height='715' loading='lazy'></button><figcaption>All 8 corners (front left, back right)</figcaption></figure></div><p class='hint'>Tap a photo to enlarge.</p></section>
+</article>
+
+<article class="card" data-status="ALERT" data-lane="1" id="gengar-gym-heroes">
+  <header class="card-head">
+    <div class="badges">
+      <span class="badge badge-ALERT">ALERT</span>
+      <span class="badge badge-lane">Lane 1</span>
+    </div>
+    <h2>2000 Gym Heroes 1st Ed Sabrina&#x27;s Gengar #14, PSA 10</h2>
+    <p class="card-meta"><span>Lane 1 · TAG Flip</span> · <span>Verified 17 Nov 2026, 00:17 Asia/Bangkok (ICT) | Re-checked live and comps refreshed 17 Nov 2026, 10:10 Asia/Bangkok (ICT)</span></p>
+  </header>
+  <a class='open-btn' href='https://www.fanaticscollect.com/weekly/ca12ecaa-dbfd-11f1-99ca-0a58a9feac02' target='_blank' rel='noopener noreferrer'>Open listing<span class='open-sub'>Fanatics · https://www.fanaticscollect.com/weekly/ca12ecaa-dbfd-11f1-99ca-0a58a9feac02</span></a>
+  <p class='live-note'>Live as of 10:10 ICT, 17 Nov 2026; closes Mon 23 Nov 10:00 ICT</p>
+  <dl class='solds facts'><div class='kv'><dt>Live / ask</dt><dd>Current bid $6,250 (21 bids) as of 10:10 ICT, 17 Nov 2026</dd></div><div class='kv'><dt>Closes</dt><dd>Mon 23 Nov 2026 10:00 ICT</dd></div></dl>
+  <section class='block money'><h3>Last solds (30 days)</h3><dl class='solds'><div class='kv'><dt>PSA 10</dt><dd>$72,568.80 (Alt, 29 Oct); also Fanatics $84,000 and Goldin $62,227.32 (25 Oct)</dd></div><div class='kv'><dt>TAG 10</dt><dd>$36,133.20 (Alt, 5 Nov)</dd></div><div class='kv'><dt>PSA 9</dt><dd>$4,450 (eBay, 15 Nov); Fanatics $3,960 and $4,080 (15 Nov)</dd></div><div class='kv'><dt>CGC 10</dt><dd>$4,605 (eBay, 15 Nov)</dd></div></dl></section>
+  <section class='block risks'><h3>Risks</h3><ul><li>Centering alert only — not a buy pass</li><li>Front L/R sits right on the 52/48 line</li><li>The TAG 10 sale ($36,133) is about half the PSA 10 price, so cracking it for TAG loses money</li></ul></section>
+  <section class='block gradeblock'><h3>Score &amp; centering</h3><dl class='solds'><div class='kv'><dt>Front centering</dt><dd>L/R 51.98 (52/48, at the line), T/B 50.78 (51/49)</dd></div><div class='kv'><dt>Back centering</dt><dd>L/R 49.33 (49/51), T/B 50.79 (51/49)</dd></div></dl><p class='note'>All 8 corners clean in CT crops</p></section>
+  <section class='block gallery'><h3>Photos</h3><div class='shots'><figure class='shot' data-kind='overview'><button type='button' class='shot-btn' data-idx='12' aria-label='Enlarge: Card front (label cropped)'><img src='images/gengar-gym-heroes_00_overview.jpg' alt='Sabrina&#x27;s Gengar card front, slab label cropped off' width='1222' height='1676' loading='lazy'></button><figcaption>Card front (label cropped)</figcaption></figure><figure class='shot' data-kind='overview'><button type='button' class='shot-btn' data-idx='13' aria-label='Enlarge: Card back (label cropped)'><img src='images/gengar-gym-heroes_01_overview.jpg' alt='Sabrina&#x27;s Gengar card back, slab label cropped off' width='1213' height='1667' loading='lazy'></button><figcaption>Card back (label cropped)</figcaption></figure><figure class='shot' data-kind='centering'><button type='button' class='shot-btn' data-idx='14' aria-label='Enlarge: Front centering · 3 stations per side'><img src='images/gengar-gym-heroes_02_centering.jpg' alt='Sabrina&#x27;s Gengar front centering, three stations per side' width='900' height='1200' loading='lazy'></button><figcaption>Front centering · 3 stations per side</figcaption></figure><figure class='shot' data-kind='centering'><button type='button' class='shot-btn' data-idx='15' aria-label='Enlarge: Back centering · 3 stations per side'><img src='images/gengar-gym-heroes_03_centering.jpg' alt='Sabrina&#x27;s Gengar back centering, three stations per side' width='900' height='1200' loading='lazy'></button><figcaption>Back centering · 3 stations per side</figcaption></figure><figure class='shot' data-kind='corners'><button type='button' class='shot-btn' data-idx='16' aria-label='Enlarge: Front corners · CT x4'><img src='images/gengar-gym-heroes_04_corners.jpg' alt='Sabrina&#x27;s Gengar front four corners, zoomed, no slab label' width='1400' height='343' loading='lazy'></button><figcaption>Front corners · CT x4</figcaption></figure><figure class='shot' data-kind='corners'><button type='button' class='shot-btn' data-idx='17' aria-label='Enlarge: Back corners · CT x4'><img src='images/gengar-gym-heroes_05_corners.jpg' alt='Sabrina&#x27;s Gengar back four corners, zoomed, no slab label' width='1400' height='343' loading='lazy'></button><figcaption>Back corners · CT x4</figcaption></figure></div><p class='hint'>Tap a photo to enlarge.</p></section>
+</article>
+
+<article class="card" data-status="PASS" data-lane="2" id="lugia-neo-genesis">
+  <header class="card-head">
+    <div class="badges">
+      <span class="badge badge-PASS">PASS</span>
+      <span class="badge badge-lane">Lane 2</span>
+    </div>
+    <h2>2000 Neo Genesis 1st Ed Lugia #9, PSA 9</h2>
+    <p class="card-meta"><span>Lane 2 · CGC Regrade</span> · <span>Verified 16–17 Nov 2026, ~23:45–00:40 Asia/Bangkok (ICT) | Re-checked live and comps refreshed 17 Nov 2026, 10:10 Asia/Bangkok (ICT)</span></p>
+  </header>
+  <a class='open-btn' href='https://alt.xyz/itm/eac9e64c-19f8-4f99-98af-ecb29a241a87' target='_blank' rel='noopener noreferrer'>Open listing<span class='open-sub'>Alt · https://alt.xyz/itm/eac9e64c-19f8-4f99-98af-ecb29a241a87</span></a>
+  <p class='live-note'>Auction live as of 10:10 ICT, 17 Nov 2026; closes Fri 27 Nov 2026 09:02 ICT</p>
+  <dl class='solds facts'><div class='kv'><dt>Live / ask</dt><dd>Current bid $2,101 (8 bids) as of 10:10 ICT, 17 Nov 2026</dd></div><div class='kv'><dt>Closes</dt><dd>Fri 27 Nov 2026 09:02 ICT</dd></div><div class='kv highlight'><dt>If it hits</dt><dd>At the last PSA 9 sale ($10,822): about +$4,986 (37%) if CGC 10 (0.9 × $20,400). At the current $2,101 bid: about +$15,451</dd></div><div class='kv miss'><dt>If it misses</dt><dd>At the last PSA 9 sale ($10,822): about −$6,803 if it comes back CGC 9.5 (0.9 × $7,301, 5 Nov). At the current bid a 9.5 still nets about +$3,662</dd></div></dl>
+  <section class='block money'><h3>Last solds (30 days)</h3><dl class='solds'><div class='kv'><dt>PSA 9</dt><dd>$10,822 (eBay, 15 Nov); same day $12,000, $12,600, $15,600</dd></div><div class='kv'><dt>CGC 10</dt><dd>$20,400 (Fanatics, 15 Nov); $18,601.20 (Alt, 12 Nov), $35,000 (7 Nov), $22,200 (1 Nov)</dd></div><div class='kv'><dt>CGC 9.5</dt><dd>$7,301 (eBay, 5 Nov)</dd></div><div class='kv'><dt>PSA 10</dt><dd>$451,384.80 (Alt, 29 Oct)</dd></div></dl></section>
+  <section class='block risks'><h3>Risks</h3><ul><li>CGC 10 prices are falling ($35,000 → $22,200 → $20,400)</li><li>The bid will rise well past $2,101; at PSA 9 market prices the margin is thinner</li><li>Front L/R 53/47 is inside the limit, but only by about 2 points</li><li>Faint mark near the front bottom-right corner, likely the holder</li></ul></section>
+  <section class='block gradeblock'><h3>Score &amp; centering</h3><dl class='solds'><div class='kv'><dt>Score</dt><dd>970 (970.4 measured)</dd></div><div class='kv'><dt>Front centering</dt><dd>L/R 53.2/46.8 (about 53/47), T/B 50.2/49.8 (about 50/50)</dd></div><div class='kv'><dt>Back centering</dt><dd>L/R 46.6/53.4 (about 47/53), T/B 49.0/51.0</dd></div></dl><p class='note'>Front L/R has about 2 points of room under the CGC 10 55/45 limit</p></section>
+  <section class='block gallery'><h3>Photos</h3><div class='shots'><figure class='shot' data-kind='centering'><button type='button' class='shot-btn' data-idx='18' aria-label='Enlarge: Front centering · 53.2/46.8 L/R, 50.2/49.8 T/B'><img src='images/lugia-neo-genesis_00_centering.jpg' alt='Lugia front centering, three stations per side, left border wider than right' width='1400' height='579' loading='lazy'></button><figcaption>Front centering · 53.2/46.8 L/R, 50.2/49.8 T/B</figcaption></figure><figure class='shot' data-kind='centering'><button type='button' class='shot-btn' data-idx='19' aria-label='Enlarge: Back centering · 46.6/53.4 L/R, 49.0/51.0 T/B'><img src='images/lugia-neo-genesis_01_centering.jpg' alt='Lugia back centering, three stations per side' width='1400' height='575' loading='lazy'></button><figcaption>Back centering · 46.6/53.4 L/R, 49.0/51.0 T/B</figcaption></figure><figure class='shot' data-kind='corners'><button type='button' class='shot-btn' data-idx='20' aria-label='Enlarge: All 8 corners'><img src='images/lugia-neo-genesis_02_corners.jpg' alt='Lugia all eight corners zoomed, no slab label' width='1400' height='725' loading='lazy'></button><figcaption>All 8 corners</figcaption></figure></div><p class='hint'>Tap a photo to enlarge.</p></section>
+</article>
+
+<article class="card" data-status="WATCH" data-lane="2" id="feraligatr-neo-genesis">
+  <header class="card-head">
+    <div class="badges">
+      <span class="badge badge-WATCH">WATCH</span>
+      <span class="badge badge-lane">Lane 2</span>
+    </div>
+    <h2>Neo Genesis 1st Ed Feraligatr #5, PSA 9</h2>
+    <p class="card-meta"><span>Lane 2 · CGC Regrade</span> · <span>Verified 16–17 Nov 2026, ~23:45–00:40 Asia/Bangkok (ICT) | Re-checked live and comps refreshed 17 Nov 2026, 10:10 Asia/Bangkok (ICT)</span></p>
+  </header>
+  <a class='open-btn' href='https://alt.xyz/itm/581e5ac6-809e-44ee-8e9b-029c59ee3c3d' target='_blank' rel='noopener noreferrer'>Open listing<span class='open-sub'>Alt · https://alt.xyz/itm/581e5ac6-809e-44ee-8e9b-029c59ee3c3d</span></a>
+  <p class='live-note'>Auction live as of 10:10 ICT, 17 Nov 2026; closes Fri 27 Nov 2026 09:02 ICT</p>
+  <dl class='solds facts'><div class='kv'><dt>Live / ask</dt><dd>Current bid $220 (0 bids) as of 10:10 ICT, 17 Nov 2026</dd></div><div class='kv'><dt>Closes</dt><dd>Fri 27 Nov 2026 09:02 ICT</dd></div><div class='kv highlight'><dt>If it hits</dt><dd>About +$872 (37%) only near the lowest PSA 9 price of $1,825. Fails at most later PSA 9 prices</dd></div><div class='kv miss'><dt>If it misses</dt><dd>About −$1,288 if it comes back CGC 9.5 at the $1,825 PSA 9 price (CGC 9.5 sold $1,200 on 16 Nov)</dd></div></dl>
+  <section class='block money'><h3>Last solds (30 days)</h3><dl class='solds'><div class='kv'><dt>PSA 9</dt><dd>$1,825 (eBay, 13 Nov); $1,850 (10 Nov), $2,400 / $2,370 (Fanatics, 8 Nov)</dd></div><div class='kv'><dt>CGC 10</dt><dd>$3,600 (eBay, 30 Oct; title does not say Gem Mint); $5,000 (19 Oct)</dd></div><div class='kv'><dt>CGC 9.5</dt><dd>$1,200 (Fanatics, 16 Nov); $1,250 (31 Oct)</dd></div></dl></section>
+  <section class='block risks'><h3>Risks</h3><ul><li>Small doubtful flecks on both faces</li><li>Only profitable near the lowest recent PSA 9 price</li><li>Newest CGC 10 title does not say Gem Mint</li></ul></section>
+  <section class='block gradeblock'><h3>Score &amp; centering</h3><dl class='solds'><div class='kv'><dt>Score</dt><dd>~945</dd></div><div class='kv'><dt>Front centering</dt><dd>L/R 51.7/48.3, T/B 47.0/53.0</dd></div><div class='kv'><dt>Back centering</dt><dd>L/R 43.8/56.2, T/B 47.1/52.9</dd></div></dl></section>
+  <section class='block gallery'><h3>Photos</h3><div class='shots'><figure class='shot' data-kind='centering'><button type='button' class='shot-btn' data-idx='21' aria-label='Enlarge: Front centering · 51.7/48.3 L/R, 47.0/53.0 T/B'><img src='images/feraligatr-neo-genesis_00_centering.jpg' alt='Feraligatr front centering, three stations per side' width='1400' height='556' loading='lazy'></button><figcaption>Front centering · 51.7/48.3 L/R, 47.0/53.0 T/B</figcaption></figure><figure class='shot' data-kind='centering'><button type='button' class='shot-btn' data-idx='22' aria-label='Enlarge: Back centering · 43.8/56.2 L/R, 47.1/52.9 T/B'><img src='images/feraligatr-neo-genesis_01_centering.jpg' alt='Feraligatr back centering, three stations per side' width='1400' height='566' loading='lazy'></button><figcaption>Back centering · 43.8/56.2 L/R, 47.1/52.9 T/B</figcaption></figure><figure class='shot' data-kind='corners'><button type='button' class='shot-btn' data-idx='23' aria-label='Enlarge: All 8 corners'><img src='images/feraligatr-neo-genesis_02_corners.jpg' alt='Feraligatr all eight corners zoomed, no slab label' width='1400' height='725' loading='lazy'></button><figcaption>All 8 corners</figcaption></figure></div><p class='hint'>Tap a photo to enlarge.</p></section>
+</article>
+
+<article class="card" data-status="WATCH" data-lane="1" id="charizard-base-set">
+  <header class="card-head">
+    <div class="badges">
+      <span class="badge badge-WATCH">WATCH</span>
+      <span class="badge badge-lane">Lane 1</span>
+    </div>
+    <h2>1999 Base Set Charizard #4, PSA 9</h2>
+    <p class="card-meta"><span>Lane 1 · TAG Flip</span> · <span>Verified 16 Nov 2026, ~03:40 Asia/Bangkok (ICT); still listed 22:10 ICT | Re-checked live and comps refreshed 17 Nov 2026, 10:10 Asia/Bangkok (ICT)</span></p>
+  </header>
+  <a class='open-btn' href='https://alt.xyz/itm/b81b139e-bfba-40c7-b17f-88ceca8651aa' target='_blank' rel='noopener noreferrer'>Open listing<span class='open-sub'>Alt · https://alt.xyz/itm/b81b139e-bfba-40c7-b17f-88ceca8651aa</span></a>
+  <p class='live-note'>Still listed at 10:10 ICT, 17 Nov 2026 (buy-now, no end time)</p>
+  <dl class='solds facts'><div class='kv'><dt>Live / ask</dt><dd>Buy-now $4,750, still listed 10:10 ICT, 17 Nov 2026</dd></div><div class='kv highlight'><dt>If it hits</dt><dd>TAG 10 (estimate 0.8 × $32,325.60): about +$18,291 at $4,750</dd></div><div class='kv miss'><dt>If it misses</dt><dd>No TAG 9 sale; using the PSA 9 $3,300 sale as stand-in: about −$2,013</dd></div></dl>
+  <section class='block money'><h3>Last solds (30 days)</h3><dl class='solds'><div class='kv'><dt>PSA 9</dt><dd>$3,300 and $3,600 (eBay, 16 Nov); $2,788.15–$2,907.08 (14 Nov)</dd></div><div class='kv'><dt>CGC 10</dt><dd>$5,101.01 (eBay, 2 Nov)</dd></div><div class='kv'><dt>PSA 10</dt><dd>$32,325.60 (Alt, 5 Nov); $38,600 (eBay, 4 Nov); $32,940 (Goldin, 25 Oct)</dd></div><div class='kv'><dt>TAG 10</dt><dd>No sale in 30 days — estimate 0.8 × PSA 10 = $25,860.48</dd></div></dl></section>
+  <section class='block risks'><h3>Risks</h3><ul><li>Two white specks in the back bottom-left border (dust or print flecks; photo cannot tell)</li><li>Ask is above recent PSA 9 sales of $2,788–$3,600</li><li>TAG 10 value is an estimate</li></ul></section>
+  <section class='block gradeblock'><h3>Score &amp; centering</h3><dl class='solds'><div class='kv'><dt>Score</dt><dd>962.9–964.9 (just under the 964 TAG 10 bar)</dd></div><div class='kv'><dt>Front centering</dt><dd>L/R 50.78, T/B 50.34 (about 51/50)</dd></div><div class='kv'><dt>Back centering</dt><dd>L/R 49.14, T/B 52.52 (about 49/53)</dd></div></dl><p class='note'>All 8 corners clean</p></section>
+  <section class='block gallery'><h3>Photos</h3><div class='shots'><figure class='shot' data-kind='overview'><button type='button' class='shot-btn' data-idx='24' aria-label='Enlarge: Card front (label cropped)'><img src='images/charizard-base-set_00_overview.jpg' alt='Charizard card front, slab label cropped off' width='700' height='960' loading='lazy'></button><figcaption>Card front (label cropped)</figcaption></figure><figure class='shot' data-kind='overview'><button type='button' class='shot-btn' data-idx='25' aria-label='Enlarge: Card back (label cropped)'><img src='images/charizard-base-set_01_overview.jpg' alt='Charizard card back, slab label cropped off' width='700' height='961' loading='lazy'></button><figcaption>Card back (label cropped)</figcaption></figure><figure class='shot' data-kind='centering'><button type='button' class='shot-btn' data-idx='26' aria-label='Enlarge: Front centering · 3 stations per side'><img src='images/charizard-base-set_02_centering.jpg' alt='Charizard front centering, three stations per side' width='900' height='1200' loading='lazy'></button><figcaption>Front centering · 3 stations per side</figcaption></figure><figure class='shot' data-kind='centering'><button type='button' class='shot-btn' data-idx='27' aria-label='Enlarge: Back centering · 3 stations per side'><img src='images/charizard-base-set_03_centering.jpg' alt='Charizard back centering, three stations per side' width='900' height='1200' loading='lazy'></button><figcaption>Back centering · 3 stations per side</figcaption></figure><figure class='shot' data-kind='corners'><button type='button' class='shot-btn' data-idx='28' aria-label='Enlarge: Front corners'><img src='images/charizard-base-set_04_corners.jpg' alt='Charizard front four corners, zoomed, no slab label' width='1400' height='346' loading='lazy'></button><figcaption>Front corners</figcaption></figure><figure class='shot' data-kind='corners'><button type='button' class='shot-btn' data-idx='29' aria-label='Enlarge: Back corners'><img src='images/charizard-base-set_05_corners.jpg' alt='Charizard back four corners, zoomed, no slab label' width='1400' height='346' loading='lazy'></button><figcaption>Back corners</figcaption></figure><figure class='shot' data-kind='closeup'><button type='button' class='shot-btn' data-idx='30' aria-label='Enlarge: Back bottom-left — the two white specks'><img src='images/charizard-base-set_06_closeup.jpg' alt='Charizard back bottom-left border, two white specks inside the blue border' width='1200' height='840' loading='lazy'></button><figcaption>Back bottom-left — the two white specks</figcaption></figure></div><p class='hint'>Tap a photo to enlarge.</p></section>
+</article>
+
+<article class="card" data-status="PASS" data-lane="5" id="deoxys-jp">
+  <header class="card-head">
+    <div class="badges">
+      <span class="badge badge-PASS">PASS</span>
+      <span class="badge badge-lane">Lane 5</span>
+    </div>
+    <h2>Deoxys #444 JP, CGC Pristine 10</h2>
+    <p class="card-meta"><span>Lane 5 · Gap</span> · <span>Verified 16 Nov 2026, 10:09–10:14 Asia/Bangkok (ICT) | Re-checked live and comps refreshed 17 Nov 2026, 10:10 Asia/Bangkok (ICT)</span></p>
+  </header>
+  <a class='open-btn' href='https://www.fanaticscollect.com/weekly/17242622-d856-11f1-9b4b-06ffcf62622d' target='_blank' rel='noopener noreferrer'>Open listing<span class='open-sub'>Fanatics · https://www.fanaticscollect.com/weekly/17242622-d856-11f1-9b4b-06ffcf62622d</span></a>
+  <p class='live-note'>Live as of 10:10 ICT, 17 Nov 2026; closes Mon 23 Nov 10:00 ICT</p>
+  <dl class='solds facts'><div class='kv'><dt>Live / ask</dt><dd>Current bid $13 (2 bids) as of 10:10 ICT, 17 Nov 2026</dd></div><div class='kv'><dt>Closes</dt><dd>Mon 23 Nov 2026 10:00 ICT</dd></div><div class='kv highlight'><dt>If it hits</dt><dd>If it crosses to PSA 10 (0.9 × $1,633.20): about +$1,177 at the current $13 bid</dd></div><div class='kv miss'><dt>If it misses</dt><dd>If it stays CGC Pristine 10 (0.9 × $814.80): about +$441 at the current bid. The bid will rise; the gap is only 2.0× ($1,633 vs $815)</dd></div></dl>
+  <section class='block money'><h3>Last solds (30 days)</h3><dl class='solds'><div class='kv'><dt>PSA 10</dt><dd>$1,633.20 (Alt, 5 Nov)</dd></div><div class='kv'><dt>CGC Pristine 10</dt><dd>$814.80 (Alt, 29 Oct)</dd></div><div class='kv'><dt>CGC 10</dt><dd>$217.20 and $193.20 (Alt, 29 Oct)</dd></div><div class='kv'><dt>PSA 9</dt><dd>$399 (eBay, 21 Oct)</dd></div></dl></section>
+  <section class='block risks'><h3>Risks</h3><ul><li>PSA 10 / Pristine gap is only just 2× (2.004×)</li><li>Back specks uncertain</li><li>Only one PSA 10 sale in 30 days</li></ul></section>
+  <section class='block gradeblock'><h3>Score &amp; centering</h3><dl class='solds'><div class='kv'><dt>Score</dt><dd>956–958 (Lane 5 gap pass, not a Lane 1 TAG 10 pass)</dd></div><div class='kv'><dt>Front centering</dt><dd>L/R 52/48 (±4 px could read 54.7); T/B 49.7/50.3</dd></div><div class='kv'><dt>Back centering</dt><dd>L/R about 46/54 (gold-to-blue fade, approximate)</dd></div></dl><p class='note'>All 8 corners clean. No zoomed 3-station crop was on file; the front and back photos are label-cropped card views with measurement lines, not 3-station sheets.</p></section>
+  <section class='block gallery'><h3>Photos</h3><div class='shots'><figure class='shot' data-kind='overview'><button type='button' class='shot-btn' data-idx='31' aria-label='Enlarge: Card front (label cropped)'><img src='images/deoxys-jp_00_overview.jpg' alt='Deoxys card front, slab label cropped off, with centering measurement overlay' width='792' height='1252' loading='lazy'></button><figcaption>Card front (label cropped)</figcaption></figure><figure class='shot' data-kind='overview'><button type='button' class='shot-btn' data-idx='32' aria-label='Enlarge: Card back (label cropped)'><img src='images/deoxys-jp_01_overview.jpg' alt='Deoxys card back, slab label cropped off, with centering measurement overlay' width='793' height='1252' loading='lazy'></button><figcaption>Card back (label cropped)</figcaption></figure><figure class='shot' data-kind='corners'><button type='button' class='shot-btn' data-idx='33' aria-label='Enlarge: All 8 corners'><img src='images/deoxys-jp_02_corners.jpg' alt='Deoxys all eight corners zoomed, no slab label' width='1400' height='776' loading='lazy'></button><figcaption>All 8 corners</figcaption></figure></div><p class='hint'>Tap a photo to enlarge.</p></section>
+</article>
+
+<article class="card" data-status="PASS" data-lane="1" id="dewgong-skyridge">
+  <header class="card-head">
+    <div class="badges">
+      <span class="badge badge-PASS">PASS</span>
+      <span class="badge badge-lane">Lane 1</span>
+    </div>
+    <h2>2003 Skyridge Dewgong H6, PSA 9</h2>
+    <p class="card-meta"><span>Lane 1 · TAG Flip</span> · <span>Verified 16 Nov 2026, 06:30 Asia/Bangkok (ICT) | Re-checked live and comps refreshed 17 Nov 2026, 10:10 Asia/Bangkok (ICT)</span></p>
+  </header>
+  <a class='open-btn' href='https://www.fanaticscollect.com/buy-now/2fe1e1cd-659c-4433-9759-85348464c556' target='_blank' rel='noopener noreferrer'>Open listing<span class='open-sub'>Fanatics · https://www.fanaticscollect.com/buy-now/2fe1e1cd-659c-4433-9759-85348464c556</span></a>
+  <p class='live-note'>Still listed at 10:10 ICT, 17 Nov 2026 (buy-now)</p>
+  <dl class='solds facts'><div class='kv'><dt>Live / ask</dt><dd>Buy-now $2,295, still listed 10:10 ICT, 17 Nov 2026</dd></div><div class='kv highlight'><dt>If it hits</dt><dd>TAG 10 (estimate 0.8 × $3,960 = $3,168): about +$323 at $2,295 — thin, down from yesterday because PSA 10 fell</dd></div><div class='kv miss'><dt>If it misses</dt><dd>No TAG 9 sale; using the PSA 9 $841.20 sale as stand-in: about −$1,771</dd></div></dl>
+  <section class='block money'><h3>Last solds (30 days)</h3><dl class='solds'><div class='kv'><dt>PSA 9</dt><dd>$841.20 (Alt, 29 Oct); $750 (Fanatics, 25 Oct)</dd></div><div class='kv'><dt>PSA 10</dt><dd>$3,960 (Fanatics, 15 Nov); $4,152.88 (13 Nov), $4,450 / $4,250 (11 Nov)</dd></div><div class='kv'><dt>TAG 10</dt><dd>No sale in 30 days — estimate 0.8 × $3,960 = $3,168</dd></div></dl></section>
+  <section class='block risks'><h3>Risks</h3><ul><li>Margin is now thin: about +$323 if TAG 10</li><li>Ask is 2.73× the PSA 9 last sold</li><li>TAG 10 value is an estimate</li><li>Back face uncertain (flecks on the corners)</li></ul></section>
+  <section class='block gradeblock'><h3>Score &amp; centering</h3><dl class='solds'><div class='kv'><dt>Score</dt><dd>965–967</dd></div><div class='kv'><dt>Front centering</dt><dd>e-card front, thin pair only: T 106 / R 104 px (≈50.5/49.5)</dd></div><div class='kv'><dt>Back centering</dt><dd>L/R 47.4/52.6, T/B 49.4/50.6</dd></div></dl><p class='note'>Centering re-measured by CT 17 Nov from the full-size originals (front 2777×4650, card ~2,140 px wide). Two back stations (R75, B75) landed on the wrong line; medians unaffected.</p></section>
+  <section class='block gallery'><h3>Photos</h3><div class='shots'><figure class='shot' data-kind='centering'><button type='button' class='shot-btn' data-idx='34' aria-label='Enlarge: Front centering · thin pair T/R (e-card) · 3 stations per side'><img src='images/dewgong-skyridge_00_centering.jpg' alt='2003 Skyridge Dewgong H6 – Front centering · thin pair T/R (e-card) · 3 stations per side' width='900' height='1200' loading='lazy'></button><figcaption>Front centering · thin pair T/R (e-card) · 3 stations per side</figcaption></figure><figure class='shot' data-kind='centering'><button type='button' class='shot-btn' data-idx='35' aria-label='Enlarge: Back centering · 47.4/52.6 L/R, 49.4/50.6 T/B'><img src='images/dewgong-skyridge_01_centering.jpg' alt='2003 Skyridge Dewgong H6 – Back centering · 47.4/52.6 L/R, 49.4/50.6 T/B' width='900' height='1200' loading='lazy'></button><figcaption>Back centering · 47.4/52.6 L/R, 49.4/50.6 T/B</figcaption></figure><figure class='shot' data-kind='corners'><button type='button' class='shot-btn' data-idx='36' aria-label='Enlarge: Front corners'><img src='images/dewgong-skyridge_02_corners.jpg' alt='Dewgong front four corners, zoomed, no slab label' width='1290' height='1290' loading='lazy'></button><figcaption>Front corners</figcaption></figure><figure class='shot' data-kind='corners'><button type='button' class='shot-btn' data-idx='37' aria-label='Enlarge: Back corners'><img src='images/dewgong-skyridge_03_corners.jpg' alt='Dewgong back four corners, zoomed, no slab label' width='1290' height='1290' loading='lazy'></button><figcaption>Back corners</figcaption></figure></div><p class='hint'>Tap a photo to enlarge.</p></section>
+</article>
+
+<article class="card" data-status="PASS" data-lane="1" id="skarmory-neo-genesis">
+  <header class="card-head">
+    <div class="badges">
+      <span class="badge badge-PASS">PASS</span>
+      <span class="badge badge-lane">Lane 1</span>
+    </div>
+    <h2>Neo Genesis 1st Ed Skarmory #13, PSA 9</h2>
+    <p class="card-meta"><span>Lane 1 · TAG Flip</span> · <span>Verified 16 Nov 2026, ~04:35 Asia/Bangkok (ICT) | Re-checked live and comps refreshed 17 Nov 2026, 10:10 Asia/Bangkok (ICT)</span></p>
+  </header>
+  <a class='open-btn' href='https://alt.xyz/itm/abd2f177-2cdb-49fe-97f2-3925dc61a10b' target='_blank' rel='noopener noreferrer'>Open listing<span class='open-sub'>Alt · https://alt.xyz/itm/abd2f177-2cdb-49fe-97f2-3925dc61a10b</span></a>
+  <p class='live-note'>Still listed at 10:10 ICT, 17 Nov 2026 (buy-now)</p>
+  <dl class='solds facts'><div class='kv'><dt>Live / ask</dt><dd>Buy-now $1,250, still listed 10:10 ICT, 17 Nov 2026</dd></div><div class='kv highlight'><dt>If it hits</dt><dd>TAG 10 (estimate 0.8 × $6,000 = $4,800): about +$2,837 at $1,250</dd></div><div class='kv miss'><dt>If it misses</dt><dd>No TAG 9 sale; using the PSA 9 $355 sale as stand-in: about −$1,163</dd></div></dl>
+  <section class='block money'><h3>Last solds (30 days)</h3><dl class='solds'><div class='kv'><dt>PSA 9</dt><dd>$355 (eBay, 15 Nov); $288 (Fanatics, 15 Nov); $492 (Fanatics, 8 Nov)</dd></div><div class='kv'><dt>PSA 10</dt><dd>$6,000 (Fanatics, 8 Nov); $7,800 (25 Oct)</dd></div><div class='kv'><dt>TAG 10</dt><dd>No sale in 30 days — estimate 0.8 × $6,000 = $4,800</dd></div></dl></section>
+  <section class='block risks'><h3>Risks</h3><ul><li>PSA 9 prices fell to $288–$355; the ask is about 3.5× the PSA 9 last sold</li><li>TAG 10 value is an estimate</li><li>Photos are soft</li></ul></section>
+  <section class='block gradeblock'><h3>Score &amp; centering</h3><dl class='solds'><div class='kv'><dt>Score</dt><dd>965–967</dd></div><div class='kv'><dt>Front centering</dt><dd>L/R 51.4/48.6, T/B 48.9/51.1</dd></div><div class='kv'><dt>Back centering</dt><dd>L/R 49.7/50.3, T/B 50.0/50.0</dd></div></dl><p class='note'>Centering re-measured by CT 17 Nov from the full-size originals (front 2248×3666, card ~1,664 px wide).</p></section>
+  <section class='block gallery'><h3>Photos</h3><div class='shots'><figure class='shot' data-kind='centering'><button type='button' class='shot-btn' data-idx='38' aria-label='Enlarge: Front centering · 51.4/48.6 L/R, 48.9/51.1 T/B'><img src='images/skarmory-neo-genesis_00_centering.jpg' alt='Neo Genesis 1st Ed Skarmory #13 – Front centering · 51.4/48.6 L/R, 48.9/51.1 T/B' width='900' height='1200' loading='lazy'></button><figcaption>Front centering · 51.4/48.6 L/R, 48.9/51.1 T/B</figcaption></figure><figure class='shot' data-kind='centering'><button type='button' class='shot-btn' data-idx='39' aria-label='Enlarge: Back centering · 49.7/50.3 L/R, 50.0/50.0 T/B'><img src='images/skarmory-neo-genesis_01_centering.jpg' alt='Neo Genesis 1st Ed Skarmory #13 – Back centering · 49.7/50.3 L/R, 50.0/50.0 T/B' width='900' height='1200' loading='lazy'></button><figcaption>Back centering · 49.7/50.3 L/R, 50.0/50.0 T/B</figcaption></figure><figure class='shot' data-kind='overview'><button type='button' class='shot-btn' data-idx='40' aria-label='Enlarge: Card front (label cropped)'><img src='images/skarmory-neo-genesis_02_overview.jpg' alt='Skarmory card front, slab label cropped off' width='700' height='958' loading='lazy'></button><figcaption>Card front (label cropped)</figcaption></figure><figure class='shot' data-kind='overview'><button type='button' class='shot-btn' data-idx='41' aria-label='Enlarge: Card back (label cropped)'><img src='images/skarmory-neo-genesis_03_overview.jpg' alt='Skarmory card back, slab label cropped off' width='700' height='962' loading='lazy'></button><figcaption>Card back (label cropped)</figcaption></figure><figure class='shot' data-kind='corners'><button type='button' class='shot-btn' data-idx='42' aria-label='Enlarge: Front corners'><img src='images/skarmory-neo-genesis_04_corners.jpg' alt='Skarmory front four corners, zoomed, no slab label' width='1400' height='345' loading='lazy'></button><figcaption>Front corners</figcaption></figure><figure class='shot' data-kind='corners'><button type='button' class='shot-btn' data-idx='43' aria-label='Enlarge: Back corners'><img src='images/skarmory-neo-genesis_05_corners.jpg' alt='Skarmory back four corners, zoomed, no slab label' width='1400' height='345' loading='lazy'></button><figcaption>Back corners</figcaption></figure></div><p class='hint'>Tap a photo to enlarge.</p></section>
+</article>
+
+      <p class="empty" id="empty" hidden>No cards match these filters.</p>
+    </main>
+
+    <footer class="site-footer">
+      <p>Open this page in any browser, including a phone. Add a card by appending it to cards.json and re-running build.py.</p>
+    </footer>
+  </div>
+
+  <dialog class="lightbox" id="lightbox" aria-label="Enlarged photo">
+    <div class="lb-frame">
+      <img id="lb-img" alt="">
+      <p class="lb-cap" id="lb-cap"></p>
+      <div class="lb-bar">
+        <button type="button" class="lb-nav" id="lb-prev">Previous</button>
+        <button type="button" class="lb-nav" id="lb-next">Next</button>
+        <button type="button" class="lb-nav" id="lb-close">Close</button>
+      </div>
+    </div>
+  </dialog>
+  <script>
+(function () {
+  const cards = Array.from(document.querySelectorAll(".card"));
+  const empty = document.getElementById("empty");
+  const statusBtns = Array.from(document.querySelectorAll("[data-filter-status]"));
+  const laneBtns = Array.from(document.querySelectorAll("[data-filter-lane]"));
+  let status = "ALL";
+  let lane = "ALL";
+
+  function apply() {
+    let shown = 0;
+    for (const card of cards) {
+      const okStatus = status === "ALL" || card.dataset.status === status;
+      const okLane = lane === "ALL" || card.dataset.lane === lane;
+      const on = okStatus && okLane;
+      card.hidden = !on;
+      if (on) shown += 1;
+    }
+    empty.hidden = shown !== 0;
+  }
+
+  function wire(btns, key, set) {
+    for (const btn of btns) {
+      btn.addEventListener("click", () => {
+        set(btn.dataset[key]);
+        for (const b of btns) b.setAttribute("aria-pressed", String(b === btn));
+        apply();
+      });
+    }
+  }
+  wire(statusBtns, "filterStatus", (v) => { status = v; });
+  wire(laneBtns, "filterLane", (v) => { lane = v; });
+
+  const shots = Array.from(document.querySelectorAll(".shot-btn"));
+  const dialog = document.getElementById("lightbox");
+  const lbImg = document.getElementById("lb-img");
+  const lbCap = document.getElementById("lb-cap");
+  let cur = 0;
+
+  function openAt(i) {
+    const btn = shots[i];
+    if (!btn) return;
+    cur = i;
+    const img = btn.querySelector("img");
+    const cap = btn.parentElement.querySelector("figcaption");
+    lbImg.src = img.src;
+    lbImg.alt = img.alt || "";
+    lbCap.textContent = cap ? cap.textContent : "";
+    if (typeof dialog.showModal === "function") dialog.showModal();
+    else dialog.setAttribute("open", "");
+  }
+
+  shots.forEach((btn) => {
+    btn.addEventListener("click", () => openAt(Number(btn.dataset.idx)));
+  });
+  document.getElementById("lb-prev").addEventListener("click", (ev) => {
+    ev.preventDefault();
+    openAt((cur - 1 + shots.length) % shots.length);
+  });
+  document.getElementById("lb-next").addEventListener("click", (ev) => {
+    ev.preventDefault();
+    openAt((cur + 1) % shots.length);
+  });
+  document.getElementById("lb-close").addEventListener("click", () => dialog.close());
+  dialog.addEventListener("click", (ev) => {
+    if (ev.target === dialog) dialog.close();
+  });
+  document.addEventListener("keydown", (ev) => {
+    if (!dialog.open) return;
+    if (ev.key === "ArrowLeft") openAt((cur - 1 + shots.length) % shots.length);
+    if (ev.key === "ArrowRight") openAt((cur + 1) % shots.length);
+  });
+})();
+</script>
+</body>
+</html>
