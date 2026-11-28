@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#F8F1E4">
+  <meta name="color-scheme" content="light">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="referrer" content="no-referrer">
+  <title>Mint 11 – Money</title>
+  <style>
+:root {
+  --cream: #F8F1E4;
+  --cream-2: #F3E6D0;
+  --champagne: #EAD7B4;
+  --panel: #FBF3E6;
+  --gold: #D9A12E;
+  --gold-2: #F2C14E;
+  --gold-deep: #A87818;
+  --lavender: #C9B5EC;
+  --lavender-soft: #E9DEFB;
+  --ink: #2E1A47;
+  --ink-soft: #4A3563;
+  --muted: #6B5A78;
+  --line: #E0C98A;
+  --pass-bg: #DCE8D4;
+  --pass-ink: #2F5A3A;
+  --watch-bg: #F6E3A8;
+  --watch-ink: #6B4A10;
+  --loss-bg: #F4DCDC;
+  --loss-ink: #8A2C2C;
+  --shadow: 0 10px 30px rgba(46, 26, 71, 0.08);
+  --radius: 18px;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background:
+    radial-gradient(1200px 500px at 10% -10%, #E9DEFB 0%, transparent 55%),
+    radial-gradient(900px 400px at 110% 0%, #F2C14E33 0%, transparent 50%),
+    var(--cream);
+  color: var(--ink);
+  font-family: "Segoe UI", "Helvetica Neue", system-ui, sans-serif;
+  line-height: 1.5;
+  font-size: 16px;
+}
+a { color: var(--ink); }
+[hidden] { display: none !important; }
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.wrap {
+  width: min(1100px, calc(100% - 2rem));
+  margin: 0 auto;
+  padding: 1.25rem 0 4rem;
+}
+.site-nav { display: flex; gap: 0.4rem; flex-wrap: wrap; margin: 0 0 0.8rem; }
+.site-nav a {
+  display: inline-flex; align-items: center; min-height: 40px;
+  padding: 0.3rem 0.9rem; border-radius: 999px;
+  border: 1px solid var(--champagne); background: var(--panel);
+  text-decoration: none; font-weight: 600; font-size: 0.92rem;
+}
+.site-nav a[aria-current="page"] { background: var(--ink); color: var(--cream); border-color: var(--ink); }
+.site-header { padding: 1.4rem 0 1rem; border-bottom: 2px solid var(--gold); }
+.head-row { display: flex; align-items: flex-end; justify-content: space-between; gap: 1rem; flex-wrap: wrap; }
+.eyebrow {
+  margin: 0 0 0.3rem; letter-spacing: 0.16em; text-transform: uppercase;
+  font-size: 0.72rem; color: var(--gold-deep); font-weight: 700;
+}
+h1, h2 { font-family: Palatino, "Palatino Linotype", "Iowan Old Style", "Times New Roman", serif; font-weight: 600; }
+.site-header h1 { margin: 0; font-size: clamp(1.8rem, 5vw, 2.6rem); letter-spacing: -0.02em; line-height: 1.15; }
+.updated { color: var(--ink-soft); margin: 0.45rem 0 0; }
+button, .btn {
+  border: 1px solid var(--champagne); background: var(--panel); color: var(--ink);
+  min-height: 44px; padding: 0.4rem 1rem; border-radius: 999px;
+  font: inherit; font-weight: 600; cursor: pointer;
+}
+button.primary { background: var(--ink); color: var(--cream); border-color: var(--ink); }
+button:disabled { opacity: 0.6; cursor: progress; }
+button:focus-visible, input:focus-visible, th button:focus-visible, .site-nav a:focus-visible {
+  outline: 3px solid var(--gold-2); outline-offset: 2px;
+}
+.panel {
+  background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius);
+  box-shadow: var(--shadow); padding: 1.15rem 1rem 1.3rem; margin: 1.15rem 0 0;
+}
+/* Lock screen */
+.lock { max-width: 440px; margin: 2rem auto 0; }
+.lock h2 { margin: 0 0 0.3rem; font-size: 1.35rem; }
+.lock p { margin: 0 0 0.9rem; color: var(--ink-soft); }
+.lock form { display: flex; flex-direction: column; gap: 0.7rem; }
+.lock input {
+  width: 100%; min-height: 48px; padding: 0.55rem 0.9rem;
+  border: 1px solid var(--champagne); border-radius: 999px; background: #fff8ee;
+  color: var(--ink); font: inherit; font-size: 16px;
+}
+.err { margin: 0; color: var(--loss-ink); background: var(--loss-bg); border-radius: 12px; padding: 0.5rem 0.8rem; font-weight: 600; }
+.status { margin: 0; color: var(--muted); font-size: 0.9rem; display: flex; align-items: center; gap: 0.5rem; }
+.spinner {
+  width: 16px; height: 16px; border-radius: 50%;
+  border: 2px solid var(--champagne); border-top-color: var(--ink);
+  animation: spin 0.8s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+/* Tiles */
+.tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 0.7rem; margin-top: 1.15rem; }
+.tile {
+  background: var(--panel); border: 1px solid var(--line); border-radius: 14px;
+  box-shadow: var(--shadow); padding: 0.8rem 0.9rem;
+}
+.tile .k { margin: 0; font-size: 0.74rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); font-weight: 700; }
+.tile .v { margin: 0.2rem 0 0; font-size: 1.35rem; font-weight: 700; font-variant-numeric: tabular-nums; }
+.tile .s { margin: 0.1rem 0 0; font-size: 0.82rem; color: var(--ink-soft); }
+.pos { color: var(--pass-ink); }
+.neg { color: var(--loss-ink); }
+/* Tables */
+.panel h2 { margin: 0 0 0.2rem; font-size: 1.28rem; }
+.panel .sub { margin: 0 0 0.7rem; color: var(--muted); font-size: 0.88rem; }
+.tools { display: flex; gap: 0.6rem; align-items: center; flex-wrap: wrap; margin-bottom: 0.6rem; }
+.tools input[type="search"] {
+  flex: 1 1 220px; min-height: 44px; padding: 0.45rem 0.9rem;
+  border: 1px solid var(--champagne); border-radius: 999px; background: #fff8ee;
+  color: var(--ink); font: inherit; font-size: 16px;
+}
+.tools .count { color: var(--muted); font-size: 0.85rem; font-weight: 600; }
+.scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; border: 1px solid var(--champagne); border-radius: 12px; background: #fffaf2; }
+table { border-collapse: collapse; width: 100%; font-size: 0.9rem; }
+th, td { padding: 0.5rem 0.65rem; text-align: left; border-bottom: 1px solid var(--cream-2); vertical-align: top; }
+td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+td.nowrap { white-space: nowrap; }
+td.wide { min-width: 14rem; }
+td.note { min-width: 16rem; color: var(--ink-soft); font-size: 0.84rem; }
+thead th { position: sticky; top: 0; background: var(--champagne); z-index: 1; padding: 0; }
+th button {
+  all: unset; box-sizing: border-box; display: flex; gap: 0.3rem; align-items: center; width: 100%;
+  padding: 0.55rem 0.65rem; cursor: pointer; font-weight: 700; font-size: 0.8rem;
+  letter-spacing: 0.04em; text-transform: uppercase; white-space: nowrap; color: var(--ink);
+}
+th.num button { justify-content: flex-end; }
+th button::after { content: "↕"; opacity: 0.35; font-size: 0.85em; }
+th[aria-sort="ascending"] button::after { content: "▲"; opacity: 1; }
+th[aria-sort="descending"] button::after { content: "▼"; opacity: 1; }
+tbody tr:nth-child(even) { background: #fbf3e680; }
+tbody tr:hover { background: var(--lavender-soft); }
+.est {
+  display: inline-block; margin-left: 0.3rem; padding: 0 0.4rem; border-radius: 999px;
+  background: var(--watch-bg); color: var(--watch-ink); font-size: 0.72rem; font-weight: 700; cursor: help;
+}
+.pill { display: inline-block; padding: 0 0.5rem; border-radius: 999px; font-size: 0.75rem; font-weight: 700; white-space: nowrap; }
+.pill.in { background: var(--pass-bg); color: var(--pass-ink); }
+.pill.out { background: var(--loss-bg); color: var(--loss-ink); }
+.empty-row td { text-align: center; color: var(--muted); padding: 1rem; }
+.legend { margin: 0.5rem 0 0; font-size: 0.82rem; color: var(--muted); }
+.site-footer { margin-top: 2rem; color: var(--muted); font-size: 0.85rem; border-top: 1px solid var(--line); padding-top: 1rem; }
+@media (max-width: 560px) {
+  .wrap { width: calc(100% - 2rem); }
+  .tile .v { font-size: 1.15rem; }
+  .head-row > div:last-child { width: 100%; }
+  #lock-btn { width: 100%; }
+  td.wide { min-width: 9.5rem; }
+  td.note { min-width: 12rem; }
+  th, td { padding: 0.45rem 0.5rem; }
+}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header class="site-header">
+      <nav class="site-nav" aria-label="Site">
+        <a href="../">Cards</a>
+        <a href="./" aria-current="page">Money</a>
+      </nav>
+      <div class="head-row">
+        <div>
+          <p class="eyebrow">Mint 11 Hobby Hub</p>
+          <h1>Money</h1>
+          <p class="updated" id="generated">Private. Unlock with the password to view.</p>
+        </div>
+        <div><button type="button" id="lock-btn" hidden>Lock</button></div>
+      </div>
+    </header>
+
+    <section class="panel lock" id="lock-view" aria-labelledby="lock-title">
+      <h2 id="lock-title">Locked</h2>
+      <p>The data is encrypted. It is decrypted only in this browser tab and is never sent anywhere.</p>
+      <form id="unlock-form" autocomplete="off">
+        <label for="pw" class="sr-only">Password</label>
+        <input id="pw" type="password" placeholder="Password" autocomplete="current-password" required>
+        <button type="submit" class="primary" id="unlock-btn">Unlock</button>
+        <p class="status" id="busy" hidden><span class="spinner" aria-hidden="true"></span><span id="busy-text">Decrypting…</span></p>
+        <p class="err" id="err" role="alert" hidden></p>
+      </form>
+    </section>
+
+    <main id="app" hidden>
+      <section aria-label="Overview" class="tiles" id="tiles"></section>
+
+      <section class="panel" aria-labelledby="inv-h">
+        <h2 id="inv-h">Held inventory</h2>
+        <p class="sub" id="inv-sub"></p>
+        <div id="inv"></div>
+        <p class="legend"><span class="est">est.</span> value is an estimate (see the evidence note; hover or tap the mark).</p>
+      </section>
+
+      <section class="panel" aria-labelledby="sold-h">
+        <h2 id="sold-h">Sold cards</h2>
+        <p class="sub" id="sold-sub"></p>
+        <div id="sold"></div>
+      </section>
+
+      <section class="panel" aria-labelledby="txn-h">
+        <h2 id="txn-h">Transactions</h2>
+        <p class="sub" id="txn-sub"></p>
+        <div id="txn"></div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <p>Data comes from <code>data/money.enc.json</code> (AES-256-GCM). Replacing that file refreshes this page. The password and decrypted data are never saved to disk; only a session key for this tab is kept until you lock or close the tab.</p>
+    </footer>
+  </div>
+
+<script>
+(() => {
+  "use strict";
+  // GitHub Pages serves /money and /money/; relative URLs need the trailing slash.
+  if (!/\/$|\.html$/.test(location.pathname)) {
+    location.replace(location.pathname + "/" + location.search);
+    return;
+  }
+
+  const DATA_URL = "../data/money.enc.json";
+  const SS_KEY = "mint11.money.session";
+  const $ = (id) => document.getElementById(id);
+
+  // ---------- crypto (see FORMAT: PBKDF2-SHA256 -> AES-256-GCM) ----------
+  const b64d = (s) => Uint8Array.from(atob(s), (c) => c.charCodeAt(0));
+  const b64e = (u8) => { let s = ""; for (const b of u8) s += String.fromCharCode(b); return btoa(s); };
+
+  async function fetchEnc() {
+    const res = await fetch(DATA_URL, { cache: "no-store" });
+    if (!res.ok) throw new Error("Could not load the data file (HTTP " + res.status + ").");
+    const enc = await res.json();
+    if (enc.v !== 1 || enc.kdf !== "PBKDF2-SHA256") throw new Error("Unsupported data format.");
+    return enc;
+  }
+  async function deriveRawKey(enc, password) {
+    const base = await crypto.subtle.importKey("raw", new TextEncoder().encode(password), "PBKDF2", false, ["deriveBits"]);
+    const bits = await crypto.subtle.deriveBits(
+      { name: "PBKDF2", hash: "SHA-256", salt: b64d(enc.salt_b64), iterations: enc.iter }, base, 256);
+    return new Uint8Array(bits);
+  }
+  async function decryptWithRaw(enc, raw) {
+    const key = await crypto.subtle.importKey("raw", raw, { name: "AES-GCM" }, false, ["decrypt"]);
+    const pt = await crypto.subtle.decrypt({ name: "AES-GCM", iv: b64d(enc.iv_b64) }, key, b64d(enc.ct_b64));
+    return JSON.parse(new TextDecoder().decode(pt));
+  }
+
+  // Session: keep the derived AES key (not the password, not the data) for this tab only.
+  // It is bound to the file's salt, so a re-encrypted money.enc.json asks for the password again.
+  const ss = {
+    get() { try { return JSON.parse(sessionStorage.getItem(SS_KEY) || "null"); } catch { return null; } },
+    set(v) { try { sessionStorage.setItem(SS_KEY, JSON.stringify(v)); } catch { /* private mode: memory only */ } },
+    clear() { try { sessionStorage.removeItem(SS_KEY); } catch { /* ignore */ } },
+  };
+
+  // ---------- formatting ----------
+  const usd0 = new Intl.NumberFormat("en-US", { style: "currency", currency: "USD", minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  const isNum = (v) => typeof v === "number" && Number.isFinite(v);
+  const money = (v) => isNum(v) ? usd0.format(v) : "—";
+  const signed = (v) => isNum(v) ? (v > 0 ? "+" : "") + usd0.format(v) : "—";
+  const cls = (v) => isNum(v) ? (v > 0 ? "pos" : v < 0 ? "neg" : "") : "";
+  const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+
+  // No cert numbers: drop cert/slab/label columns and mask cert-like numbers in free text.
+  const BLOCKED_KEY = /cert|slab|label/i;
+  function scrubRow(row) {
+    const out = {};
+    for (const [k, v] of Object.entries(row || {})) if (!BLOCKED_KEY.test(k)) out[k] = v;
+    return out;
+  }
+  const maskText = (s) => String(s ?? "")
+    .replace(/\b(cert(?:ificate)?\.?\s*(?:#|no\.?|number)?\s*:?\s*)[A-Z0-9-]{5,}/gi, "$1[hidden]")
+    .replace(/\b\d{8,10}\b/g, "[hidden]");
+
+  const ESTIMATE_RE = /estimat|\best\b|approx|assum|guess|no (?:recent )?(?:comp|sale)|proxy|placeholder|~\s*\$/i;
+  const isEstimate = (note) => ESTIMATE_RE.test(String(note || ""));
+
+  // Where a held card physically is. The inventory has no location column, so it is
+  // read from the free-text evidence_note / notes. Most specific patterns first.
+  const LOCATION_PATTERNS = [
+    /\bin[ -]transit\b(?:\s+(?:via|with|by)?\s*(?:FedEx|UPS|USPS|DHL|EMS|Thailand Post)\b)?/i,
+    /\b(?:at|with)\s+(?:PSA|CGC|BGS|Beckett|SGC|TAG)\b(?:\s+via\s+(?:Fanatics|PWCC|eBay|Alt|Collectors|Goldin|Courtyard)\b)?(?:\s+vault\b)?/i,
+    /\b(?:Fanatics|PWCC|Alt|eBay|Goldin|Courtyard|Collectors|PSA|CGC)\s+Vault\b/i,
+    /\bShip\s?My\s?Cards\b/i,
+    /\bArizona\s+TCG\b/i,
+    /\bDCSports87\b/i,
+    /\b(?:at|in)\s+(?:home|my home|the house|Bangkok|BKK|hand)\b/i,
+    /\blocation\s*[:=]\s*([^;,.\n]{2,40})/i,
+  ];
+  // Normalise casing for the common names so the column sorts and filters cleanly.
+  const LOCATION_CANON = [
+    [/^ship\s?my\s?cards$/i, "ShipMyCards"], [/^arizona\s+tcg$/i, "Arizona TCG"],
+    [/^dcsports87$/i, "DCSports87"], [/^psa\s+vault$/i, "PSA Vault"], [/^fanatics\s+vault$/i, "Fanatics vault"],
+  ];
+  function cardLocation(r) {
+    if (r.location) return maskText(String(r.location).trim());
+    for (const field of ["evidence_note", "notes", "missing"]) {
+      const text = String(r[field] || "");
+      if (!text) continue;
+      for (const re of LOCATION_PATTERNS) {
+        const m = text.match(re);
+        if (!m) continue;
+        let out = (m[1] || m[0]).trim().replace(/\s+/g, " ");
+        for (const [cre, name] of LOCATION_CANON) if (cre.test(out)) { out = name; break; }
+        return maskText(out);
+      }
+    }
+    return "";
+  }
+
+  // ---------- generic sortable / searchable table ----------
+  // cols: {key, label, num?, get?(row), render?(row), cls?}
+  function makeTable(host, { cols, rows, defaultSort, searchLabel, countNoun }) {
+    let sortKey = defaultSort?.key ?? null, sortDir = defaultSort?.dir ?? 1, query = "";
+    const uid = host.id;
+    host.innerHTML = `
+      <div class="tools" role="search">
+        <label class="sr-only" for="${uid}-q">${esc(searchLabel)}</label>
+        <input type="search" id="${uid}-q" placeholder="${esc(searchLabel)}" autocomplete="off" autocapitalize="off" spellcheck="false" enterkeyhint="search">
+        <span class="count" id="${uid}-count" aria-live="polite"></span>
+      </div>
+      <div class="scroll"><table>
+        <thead><tr>${cols.map((c) => `<th scope="col" class="${c.num ? "num" : ""}" data-key="${c.key}" aria-sort="none"><button type="button">${esc(c.label)}</button></th>`).join("")}</tr></thead>
+        <tbody></tbody>
+      </table></div>`;
+    const tbody = host.querySelector("tbody");
+    const val = (c, r) => (c.get ? c.get(r) : r[c.key]);
+    const haystack = rows.map((r) => cols.map((c) => { const v = val(c, r); return v == null ? "" : String(v); }).join(" \u0001 ").toLowerCase());
+
+    function draw() {
+      const terms = query.toLowerCase().split(/\s+/).filter(Boolean);
+      let idx = rows.map((_, i) => i).filter((i) => terms.every((t) => haystack[i].includes(t)));
+      const col = cols.find((c) => c.key === sortKey);
+      if (col) {
+        idx.sort((a, b) => {
+          const va = val(col, rows[a]), vb = val(col, rows[b]);
+          const na = va == null || va === "", nb = vb == null || vb === "";
+          if (na || nb) return na === nb ? 0 : na ? 1 : -1; // blanks last either way
+          if (col.num) return (va - vb) * sortDir;
+          return String(va).localeCompare(String(vb), undefined, { numeric: true, sensitivity: "base" }) * sortDir;
+        });
+      }
+      tbody.innerHTML = idx.length
+        ? idx.map((i) => `<tr>${cols.map((c) => `<td class="${[c.num ? "num" : "", c.cls || ""].join(" ").trim()}">${c.render ? c.render(rows[i]) : esc(val(c, rows[i]) ?? "")}</td>`).join("")}</tr>`).join("")
+        : `<tr class="empty-row"><td colspan="${cols.length}">No rows match.</td></tr>`;
+      host.querySelectorAll("th").forEach((th) => {
+        th.setAttribute("aria-sort", th.dataset.key === sortKey ? (sortDir === 1 ? "ascending" : "descending") : "none");
+      });
+      $(uid + "-count").textContent = (idx.length === rows.length ? "" : idx.length + " of ") + rows.length + " " + countNoun;
+    }
+    host.querySelector("thead").addEventListener("click", (ev) => {
+      const th = ev.target.closest("th"); if (!th) return;
+      const col = cols.find((c) => c.key === th.dataset.key);
+      if (sortKey === th.dataset.key) sortDir = -sortDir;
+      else { sortKey = th.dataset.key; sortDir = col.num ? -1 : 1; }
+      draw();
+    });
+    host.querySelector("input").addEventListener("input", (ev) => { query = ev.target.value; draw(); });
+    draw();
+  }
+
+  // ---------- render ----------
+  function tile(k, v, sub, colorVal) {
+    return `<div class="tile"><p class="k">${esc(k)}</p><p class="v ${colorVal === undefined ? "" : cls(colorVal)}">${v}</p>${sub ? `<p class="s">${esc(sub)}</p>` : ""}</div>`;
+  }
+
+  function render(data) {
+    const s = data.summary || {};
+    const inv = (data.inventory || []).map(scrubRow);
+    const profit = (data.cards_profit || []).map(scrubRow);
+    const txns = (data.transactions || []).map(scrubRow).filter((t) => t.counted === "Y");
+    const sold = profit.filter((r) => String(r.status || "").toUpperCase().startsWith("SOLD"));
+
+    if (data.generated_at) {
+      const d = new Date(data.generated_at);
+      $("generated").textContent = "Data generated " + (isNaN(d) ? data.generated_at :
+        d.toLocaleString("en-GB", { day: "numeric", month: "short", year: "numeric", hour: "2-digit", minute: "2-digit", timeZone: "Asia/Bangkok" }) + " Asia/Bangkok (ICT)");
+    }
+
+    const soldN = s.sold_cards ?? sold.length, heldN = s.held_cards ?? inv.length;
+    $("tiles").innerHTML = [
+      tile("Cash in", money(s.cash_in), "counted transactions"),
+      tile("Cash out", money(s.cash_out), "counted transactions"),
+      tile("Net cash", signed(s.net), "cash in − cash out", s.net),
+      tile("Realized profit", signed(s.realized), `on ${soldN} sold cards`, s.realized),
+      tile("Held cost", money(s.held_cost), `${heldN} held cards`),
+      tile("Held value", money(s.held_value), `${heldN} held cards`),
+      tile("Unrealized P/L", signed(s.unrealized), `on ${heldN} held cards`, s.unrealized),
+    ].join("");
+
+    // Held inventory
+    const estCount = inv.filter((r) => isEstimate(r.evidence_note)).length;
+    $("inv-sub").textContent = `${inv.length} cards held` + (estCount ? ` · ${estCount} with estimated value` : "");
+    makeTable($("inv"), {
+      rows: inv, searchLabel: "Search held cards", countNoun: "cards",
+      defaultSort: { key: "unrealized_usd", dir: -1 },
+      cols: [
+        { key: "card", label: "Card", cls: "wide", get: (r) => maskText(r.card),
+          render: (r) => esc(maskText(r.card)) + (isEstimate(r.evidence_note)
+            ? ` <span class="est" tabindex="0" title="${esc(maskText(r.evidence_note))}" aria-label="Estimated value: ${esc(maskText(r.evidence_note))}">est.</span>` : "") },
+        { key: "all_in_cost_usd", label: "Cost", num: true, render: (r) => money(r.all_in_cost_usd) },
+        { key: "current_value_usd", label: "Value", num: true, render: (r) => money(r.current_value_usd) },
+        { key: "unrealized_usd", label: "P/L", num: true,
+          get: (r) => isNum(r.unrealized_usd) ? r.unrealized_usd : (isNum(r.current_value_usd) && isNum(r.all_in_cost_usd) ? r.current_value_usd - r.all_in_cost_usd : null),
+          render: (r) => { const v = isNum(r.unrealized_usd) ? r.unrealized_usd : (isNum(r.current_value_usd) && isNum(r.all_in_cost_usd) ? r.current_value_usd - r.all_in_cost_usd : null); return `<span class="${cls(v)}">${signed(v)}</span>`; } },
+        { key: "location", label: "Location", cls: "nowrap", get: (r) => cardLocation(r) || null,
+          render: (r) => esc(cardLocation(r) || "—") },
+        { key: "bought_on", label: "Bought", cls: "nowrap" },
+        { key: "evidence_note", label: "Evidence", cls: "note", get: (r) => maskText(r.evidence_note) },
+      ],
+    });
+
+    // Sold cards. net_pct may be a fraction (0.12) or a percent (12): detect from the data.
+    const pctIsFraction = sold.every((r) => !isNum(r.net_pct) || Math.abs(r.net_pct) <= 3);
+    const pct = (v) => isNum(v) ? (pctIsFraction ? v * 100 : v).toFixed(1) + "%" : "—";
+    const realizedRows = sold.reduce((a, r) => a + (isNum(r.net_usd) ? r.net_usd : 0), 0);
+    $("sold-sub").textContent = `${sold.length} sold · net ${signed(realizedRows)}` +
+      (sold.some((r) => r.net_usd == null) ? " · rows showing — are pooled sales; the pool's profit sits on the other rows" : "");
+    makeTable($("sold"), {
+      rows: sold, searchLabel: "Search sold cards", countNoun: "cards",
+      defaultSort: { key: "net_usd", dir: -1 },
+      cols: [
+        { key: "card", label: "Card", cls: "wide", get: (r) => maskText(r.card) },
+        { key: "venue_bought", label: "Bought at", cls: "nowrap" },
+        { key: "all_in_cost", label: "Cost", num: true, render: (r) => money(r.all_in_cost) },
+        { key: "sale_price", label: "Sale", num: true, render: (r) => money(r.sale_price) },
+        { key: "fees", label: "Fees", num: true, render: (r) => money(r.fees) },
+        { key: "proceeds", label: "Proceeds", num: true, render: (r) => money(r.proceeds) },
+        { key: "net_usd", label: "Net", num: true, render: (r) => `<span class="${cls(r.net_usd)}">${signed(r.net_usd)}</span>` },
+        { key: "net_pct", label: "Net %", num: true, render: (r) => `<span class="${cls(r.net_pct)}">${pct(r.net_pct)}</span>` },
+        { key: "project", label: "Project", cls: "nowrap" },
+        { key: "evidence_note", label: "Evidence", cls: "note", get: (r) => maskText(r.evidence_note) },
+      ],
+    });
+
+    // Transactions (counted == "Y" only)
+    $("txn-sub").textContent = `${txns.length} counted transactions (rows with counted = Y; these make up the cash totals)`;
+    makeTable($("txn"), {
+      rows: txns, searchLabel: "Search transactions", countNoun: "rows",
+      defaultSort: { key: "date", dir: -1 },
+      cols: [
+        { key: "date", label: "Date", cls: "nowrap" },
+        { key: "direction", label: "Dir", render: (r) => r.direction === "IN" ? `<span class="pill in">IN</span>` : r.direction === "OUT" ? `<span class="pill out">OUT</span>` : esc(r.direction) },
+        { key: "amount_usd", label: "Amount", num: true, render: (r) => `<span class="${cls(r.amount_usd)}">${signed(r.amount_usd)}</span>` },
+        { key: "venue", label: "Venue", cls: "nowrap" },
+        { key: "category", label: "Category", cls: "nowrap" },
+        { key: "card_ref", label: "Card", cls: "wide", get: (r) => maskText(r.card_ref) },
+        { key: "status", label: "Status", cls: "nowrap" },
+        { key: "txn_id", label: "Txn", cls: "nowrap" },
+        { key: "notes", label: "Notes", cls: "note", get: (r) => maskText(r.notes) },
+      ],
+    });
+  }
+
+  // ---------- UI state ----------
+  let busy = false;
+  function setBusy(on, text) {
+    busy = on;
+    $("unlock-btn").disabled = on; $("pw").disabled = on;
+    $("busy").hidden = !on; if (text) $("busy-text").textContent = text;
+  }
+  function showError(msg) { const e = $("err"); e.textContent = msg; e.hidden = !msg; }
+  function showUnlocked(data) {
+    render(data);
+    $("lock-view").hidden = true; $("app").hidden = false; $("lock-btn").hidden = false;
+  }
+  function lock() {
+    ss.clear();
+    $("app").hidden = true; $("lock-btn").hidden = true; $("lock-view").hidden = false;
+    for (const id of ["tiles", "inv", "sold", "txn", "inv-sub", "sold-sub", "txn-sub"]) $(id).textContent = "";
+    $("generated").textContent = "Private. Unlock with the password to view.";
+    $("pw").value = ""; showError(""); $("pw").focus();
+  }
+
+  async function unlock(password) {
+    if (!window.crypto || !crypto.subtle) { showError("This page needs a secure (https) connection to decrypt."); return; }
+    setBusy(true, "Deriving key… (this takes a second)"); showError("");
+    let raw;
+    try {
+      const enc = await fetchEnc();
+      raw = await deriveRawKey(enc, password);
+      setBusy(true, "Decrypting…");
+      let data;
+      try { data = await decryptWithRaw(enc, raw); }
+      catch { showError("Wrong password. Try again."); $("pw").select(); return; }
+      ss.set({ salt: enc.salt_b64, k: b64e(raw) });
+      $("pw").value = "";
+      showUnlocked(data);
+    } catch (err) {
+      showError(err && err.message ? err.message : "Could not unlock.");
+    } finally {
+      if (raw) raw.fill(0);
+      setBusy(false);
+    }
+  }
+
+  async function resume() {
+    const sess = ss.get();
+    if (!sess || !sess.k || !window.crypto || !crypto.subtle) return;
+    setBusy(true, "Unlocking…");
+    try {
+      const enc = await fetchEnc();
+      if (enc.salt_b64 !== sess.salt) { ss.clear(); showError("The data was updated. Enter the password again."); return; }
+      showUnlocked(await decryptWithRaw(enc, b64d(sess.k)));
+    } catch {
+      ss.clear();
+    } finally { setBusy(false); }
+  }
+
+  $("unlock-form").addEventListener("submit", (ev) => {
+    ev.preventDefault();
+    if (busy) return;
+    const pw = $("pw").value;
+    if (pw) unlock(pw);
+  });
+  $("lock-btn").addEventListener("click", lock);
+  resume();
+})();
+</script>
+</body>
+</html>
